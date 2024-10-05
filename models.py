@@ -127,16 +127,16 @@ class WorldEdit(Entity):
         with open('save.dat', 'wb')as file:
             pickle.dump(game_data, file)
             
-        def clear_world(self):
-            for chunk in self.chunks.values():
-                for block in chunk.blocks.values():
-                    destroy (block)
-                destroy (chunk)
-                for tree in scene.trees.values():
-                    destroy (tree)
-            scene.trees.clear()
-            self.chunks.clear()
-def load_world(self, chunk_data, tree_data):
+    def clear_world(self):
+        for chunk in self.chunks.values():
+            for block in chunk.blocks.values():
+                destroy (block)
+            destroy (chunk)
+        for tree in scene.trees.values():
+            destroy (tree)
+        scene.trees.clear()
+        self.chunks.clear()
+    def load_world(self, chunk_data, tree_data):
         for chunk_pos, blocks in chunk_data:
             chunk = Chunk (chunk_pos) 
             for block_pos, block_id in blocks: 
@@ -145,7 +145,8 @@ def load_world(self, chunk_data, tree_data):
         for tree_pos, tree_scale in tree_data:
             tree = Tree(tree_pos)
             tree.scale= tree_scale
-def load_game(self):
+    def load_game(self):
+        
         with open('save.dat', 'rb') as file:
             game_data = pickle.load(file)
         self.clear_world()
@@ -154,8 +155,11 @@ def load_game(self):
         print("Гру завантажено")
         
         
-        
-        
+    def input (self, key):
+        if key == 'k':
+            self.save_game()
+        if key == 'l':
+            self.load_game()
         if key == 'left mouse down':
             hit_info = raycast(camera.world_position, camera.forward, distance=10)
             if hit_info.hit:
@@ -180,7 +184,7 @@ def load_game(self):
             if Block.id<0:
                 Block.id = len(block_textures)-1
 
-def update(self):
+    def update(self):
         player_pos = self.player.position
         for chunk_pos, chunk in self.chunks.items():
             chunk_world_pos = Vec3(chunk_pos[0] * CHUNKSIZE, 0, chunk_pos[1]*CHUNKSIZE)
