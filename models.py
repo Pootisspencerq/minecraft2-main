@@ -164,6 +164,7 @@ class WorldEdit(Entity):
             hit_info = raycast(camera.world_position, camera.forward, distance=10)
             if hit_info.hit:
                 block = Block(hit_info.entity.position + hit_info.normal, hit_info.entity.parent, Block.id)
+            
         if key == 'right mouse down' and mouse.hovered_entity:
             if isinstance(mouse.hovered_entity, Block):
                 block = mouse.hovered_entity
