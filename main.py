@@ -15,7 +15,7 @@ player.gravity = 0
 sky = Sky(texture="sky_sunset")
 light = DirectionalLight(shadows=True)
 light.look_at(Vec3(1,-1,1))
-background_music = Audio('background_music.mp3', loop=True, autoplay=True)
+
 
 world = WorldEdit(player)
 world.generate_world()
