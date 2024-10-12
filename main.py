@@ -5,7 +5,7 @@ from numpy import floor
 app = Ursina()
 from settings import *
 from models import Block, WorldEdit
-
+from ui import Menu
 player  = FirstPersonController()
 player.x = CHUNKSIZE/2
 player.z = CHUNKSIZE/2
@@ -18,7 +18,11 @@ light.look_at(Vec3(1,-1,1))
 
 
 world = WorldEdit(player)
-world.generate_world()
+
+menu=Menu(world)
+menu.toggle_menu()
+mouse_locked =False
+mouse_visible=True
 
 def input(key):
     player.gravity = 0.5

@@ -6,7 +6,7 @@ import pickle
 from random import randint
 
 # Sound setup
-background_music = Audio('background_music.mp3', loop=True, autoplay=True)  # Background music
+background_music = Audio('background_music.mp3', volume=1.5, loop=True, autoplay=True)  # Background music
 destroy_sound = Audio('metalbox-break3.mp3', autoplay=False)  # Destroy sound
 place_sound = Audio('clash-royale-hog-rider.mp3', autoplay=False)  # Place block sound
 scroll_sound = Audio('scroll_sound.mp3', autoplay=False)  # Scroll sound
@@ -110,6 +110,7 @@ class WorldEdit(Entity):
                 if chunk_pos not in self.chunks:
                     chunk = Chunk(chunk_pos)
                     self.chunks[chunk_pos] = chunk
+        self.menu.toggle.menu()                
 
     def save_game(self):
         game_data = {
@@ -127,16 +128,14 @@ class WorldEdit(Entity):
         with open('save.dat', 'wb') as file:
             pickle.dump(game_data, file)
         save_sound.play()  # Play save sound when the game is saved
-
+        self.menu.toggle.menu()  
     def clear_world(self):
         for chunk in self.chunks.values():
             for block in chunk.blocks.values():
                 destroy(block)
             destroy(chunk)
-
         for tree in scene.trees.values():
             destroy(tree)
-
         scene.trees.clear()
         self.chunks.clear()
 
@@ -159,8 +158,11 @@ class WorldEdit(Entity):
         self.load_world(game_data["chunks"], game_data['trees'])
         load_sound.play()  # Play load sound when the game is loaded
         print("Game loaded.")
-
+        self.menu.toggle.menu()
+        
     def input(self, key):
+        if key == "escape":
+            self.menu.toggle_menu()
         if key == 'k':
             self.save_game()
         if key == 'l':
