@@ -24,7 +24,7 @@ class Menu(Entity):
         self.title = Text(text="MINECUM", scale= 5, parent=self, origin=(0, 0), x=0, y=0.35)
         
         MenuButton('NEW GAME', game.generate_world, 0, 0.15, self)
-        MenuButton("SAVE", game.save.game, 0, -0.15, self)
+        MenuButton("SAVE", game.save_game, 0, -0.15, self)
         MenuButton("LOAD", game.load_game, 0, -0.3, self)
         MenuButton("EXIT", application.quit, 0, 0, self) 
     def input(self, key):

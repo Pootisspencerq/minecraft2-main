@@ -110,7 +110,7 @@ class WorldEdit(Entity):
                 if chunk_pos not in self.chunks:
                     chunk = Chunk(chunk_pos)
                     self.chunks[chunk_pos] = chunk
-        self.menu.toggle.menu()                
+        self.menu.toggle_menu()                
 
     def save_game(self):
         game_data = {
@@ -128,7 +128,7 @@ class WorldEdit(Entity):
         with open('save.dat', 'wb') as file:
             pickle.dump(game_data, file)
         save_sound.play()  # Play save sound when the game is saved
-        self.menu.toggle.menu()  
+        self.menu.toggle_menu()  
     def clear_world(self):
         for chunk in self.chunks.values():
             for block in chunk.blocks.values():
@@ -158,7 +158,7 @@ class WorldEdit(Entity):
         self.load_world(game_data["chunks"], game_data['trees'])
         load_sound.play()  # Play load sound when the game is loaded
         print("Game loaded.")
-        self.menu.toggle.menu()
+        self.menu.toggle_menu()
         
     def input(self, key):
         if key == "escape":
