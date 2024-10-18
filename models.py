@@ -5,13 +5,12 @@ from perlin_noise import PerlinNoise
 import pickle
 from random import randint
 
-# Sound setup
-background_music = Audio('background_music.mp3', volume=1.5, loop=True, autoplay=True)  # Background music
-destroy_sound = Audio('metalbox-break3.mp3', autoplay=False)  # Destroy sound
-place_sound = Audio('clash-royale-hog-rider.mp3', autoplay=False)  # Place block sound
-scroll_sound = Audio('scroll_sound.mp3', autoplay=False)  # Scroll sound
-save_sound = Audio('save_game.mp3', autoplay=False)  # Save game sound
-load_sound = Audio('load_game.mp3', autoplay=False)  # Load game sound
+background_music = Audio('background_music.mp3', volume=1.5, loop=True, autoplay=True)
+destroy_sound = Audio('metalbox-break3.mp3', autoplay=False)
+place_sound = Audio('clash-royale-hog-rider.mp3', autoplay=False)
+scroll_sound = Audio('scroll_sound.mp3', autoplay=False)
+save_sound = Audio('save_game.mp3', autoplay=False)
+load_sound = Audio('load_game.mp3', autoplay=False)
 
 scene.trees = {}
 
@@ -19,7 +18,7 @@ class Tree(Entity):
     def __init__(self, pos, **kwargs):
         super().__init__(
             parent=scene,
-            model='assets\\minecraft_tree\\scene',  # Model of the tree
+            model='assets\\minecraft_tree\\scene',
             scale=randint(3,5),
             collider='box',
             position=pos,
@@ -29,11 +28,11 @@ class Tree(Entity):
         scene.trees[(self.x, self.y, self.z)] = self  
 
 class Block(Button):
-    id = 3  # Default block ID
+    id = 3
     def __init__(self, pos, parent_world, block_id=3, **kwargs):
         super().__init__(
             parent=parent_world,
-            model='cube',  # Block model
+            model='cube',
             texture=block_textures[block_id],
             scale=1,
             collider='box',
@@ -57,31 +56,23 @@ class Chunk(Entity):
         self.generate_chunk()
 
     def simplify_chunk(self):
-        """Simplify chunk to optimize performance."""
         if self.is_simplify:
             return
-        
         self.model = self.combine()
         self.collider = 'mesh'
         self.texture = block_textures[self.default_texture]
-
         for block in self.blocks.values():
             destroy(block)
-
         self.is_simplify = True
 
     def detail_chunk(self):
-        """Revert the chunk to detailed blocks when needed."""
         if not self.is_simplify:
             return
-
         self.model = None
         self.collider = None
         self.texture = None
-
         for pos, block in self.blocks.items():
             new_block = Block(pos, self, block_id=block.id)
-        
         self.is_simplify = False
 
     def generate_chunk(self):
@@ -92,7 +83,6 @@ class Chunk(Entity):
                 block_z = cz * CHUNKSIZE + z
                 y = floor(self.noise([block_x/24, block_z/24])*6)
                 block = Block((block_x, y, block_z), self)
-
                 if randint(0, 200) == 52:
                     Tree((block_x, y+1, block_z))
 
@@ -127,8 +117,9 @@ class WorldEdit(Entity):
 
         with open('save.dat', 'wb') as file:
             pickle.dump(game_data, file)
-        save_sound.play()  # Play save sound when the game is saved
+        save_sound.play()
         self.menu.toggle_menu()  
+
     def clear_world(self):
         for chunk in self.chunks.values():
             for block in chunk.blocks.values():
@@ -156,12 +147,11 @@ class WorldEdit(Entity):
         self.clear_world()
         self.player.x, self.player.y, self.player.z = game_data["player_pos"]
         self.load_world(game_data["chunks"], game_data['trees'])
-        load_sound.play()  # Play load sound when the game is loaded
-        print("Game loaded.")
+        load_sound.play()
         self.menu.toggle_menu()
         
     def input(self, key):
-        if key == "escape":
+        if key == "p":
             self.menu.toggle_menu()
         if key == 'k':
             self.save_game()
@@ -172,32 +162,32 @@ class WorldEdit(Entity):
             hit_info = raycast(camera.world_position, camera.forward, distance=10)
             if hit_info.hit:
                 block = Block(hit_info.entity.position + hit_info.normal, hit_info.entity.parent, Block.id)
-                place_sound.play()  # Play sound when placing a block
+                place_sound.play()
 
         if key == 'right mouse down' and mouse.hovered_entity:
             if isinstance(mouse.hovered_entity, Block):
                 block = mouse.hovered_entity
                 chunk = block.parent
                 del chunk.blocks[(block.x, block.y, block.z)]
-                destroy_sound.play()  # Play sound when destroying a block
+                destroy_sound.play()
                 destroy(mouse.hovered_entity)
             if isinstance(mouse.hovered_entity, Tree):
                 tree = mouse.hovered_entity
                 del scene.trees[(tree.x, tree.y, tree.z)]
-                destroy_sound.play()  # Play sound when destroying a tree
+                destroy_sound.play()
                 destroy(tree)
 
         if key == "scroll up":
             Block.id += 1
             if len(block_textures) <= Block.id:
                 Block.id = 0
-            scroll_sound.play()  # Play sound when scrolling up
+            scroll_sound.play()
 
         if key == "scroll down":
             Block.id -= 1
             if Block.id < 0:
                 Block.id = len(block_textures) - 1
-            scroll_sound.play()  # Play sound when scrolling down
+            scroll_sound.play()
 
     def update(self):
         player_pos = self.player.position
