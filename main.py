@@ -21,11 +21,12 @@ world = WorldEdit(player)
 
 menu = Menu(world)
 menu.toggle_menu()
-mouse_locked = True
-mouse_visible = False
+
+mouse.locked = False  
+mouse.visible = True
 
 def input(key):
-    if key == 'space':  # Example: apply gravity with space key press
+    if key == 'space':  
         player.gravity = 0.5
 
 window.fullscreen = True

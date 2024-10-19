@@ -1,8 +1,8 @@
 import os
 from ursina import load_texture
 
-CHUNKSIZE = 2
-WORLDSIZE = 2
+CHUNKSIZE = 4
+WORLDSIZE = 10
 
 DETAIL_DISTANCE = 20
 
